@@ -1,7 +1,7 @@
 package config
 
 import (
-	"fmt"
+	"errors"
 	"os"
 )
 
@@ -11,16 +11,14 @@ type Config struct {
 }
 
 func LoadConfig() (*Config, error) {
-	groqKey := os.Getenv("GROQ_API_KEY")
-
-	if groqKey == "" {
-		return nil, fmt.Errorf("falta la variable de entorno GROQ_API_KEY")
+	cfg := &Config{
+		GroqAPIKey:   os.Getenv("GROQ_API_KEY"),
+		GeminiAPIKey: os.Getenv("GEMINI_API_KEY"),
 	}
 
-	geminiKey := os.Getenv("GEMINI_API_KEY")
+	if cfg.GroqAPIKey == "" {
+		return nil, errors.New("GROQ_API_KEY environmet variable is required")
+	}
 
-	return &Config{
-		GroqAPIKey:   groqKey,
-		GeminiAPIKey: geminiKey,
-	}, nil
+	return cfg, nil
 }

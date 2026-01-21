@@ -1,24 +1,21 @@
 package main
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/YagoNigro123/MCPGP/internal/config"
 )
 
 func main() {
-	fmt.Println("Start Server MCP...")
+	log.Println("Starting MCP server...")
 
 	cfg, err := config.LoadConfig()
-
 	if err != nil {
-		log.Fatalf("Error config: %v", err)
+		log.Fatalf("failed to load configuration: %v", err)
 	}
 
-	fmt.Println("Config charge sucessfuly.")
-	fmt.Printf("Groq Key detected (long: %d characters)\n", len(cfg.GroqAPIKey))
+	log.Println("Configuration loaded successfully")
+	log.Printf("Groq API key detected (length: %d characters)", len(cfg.GroqAPIKey))
 
 	// ...
-
 }
