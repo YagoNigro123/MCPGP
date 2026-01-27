@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/YagoNigro123/MCPGP/internal/ai"
@@ -8,28 +9,27 @@ import (
 )
 
 func main() {
-	log.Println("Starting MCP server...")
+	fmt.Println("Starting MCP Server...")
 
 	cfg, err := config.LoadConfig()
 	if err != nil {
-		log.Fatalf("failed to load configuration: %v", err)
+		log.Fatalf("Configuration error: %v", err)
 	}
 
-	groq := &ai.GroqProvider{
-		ApiKey: cfg.GroqAPIKey,
-		Model:  "llama-3.3-70b-versatile",
-	}
+	fmt.Printf("Configuration loaded. Selected Provider: %s\n", cfg.AIProvider)
 
-	prompt := "Why is Go language so fast?"
-	log.Printf("Question to Groq: '%s'...", prompt)
-
-	res, err := groq.Generate(prompt)
+	provider, err := ai.NewAIProvider(cfg)
 	if err != nil {
-		log.Fatalf("failed to get response: %v", err)
+		log.Fatalf("Factory error: %v", err)
 	}
 
-	log.Println("\nResponse:")
-	log.Println("--------------------------------------------------")
-	log.Println(res)
-	log.Println("--------------------------------------------------")
+	prompt := "Explain in one sentence why using Environment Variables is best practice."
+
+	fmt.Println("Sending request to AI...")
+	response, err := provider.Generate(prompt)
+	if err != nil {
+		log.Fatalf("Generation error: %v", err)
+	}
+
+	fmt.Printf("\nResponse (%s):\n%s\n", cfg.AIProvider, response)
 }
